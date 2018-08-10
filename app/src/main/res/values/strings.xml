@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Logogenia</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="str_senas">Señas</string>
+    <string name="str_presentW">Te presento palabras</string>
+    <string name="str_howStartW">¿Cómo empieza esta palabra?</string>
+    <string name="str_dact">Dactilológico</string>
+    <string name="str_presentL">Te presento las letras</string>
+    <string name="str_whatW">¿Qué letra es?</string>
+    <string name="str_lW">Leer y escribir</string>
+    <string name="str_read">Leer</string>
+    <string name="str_write">Escribir</string>
+    <string name="str_diccionario">Diccionario</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
