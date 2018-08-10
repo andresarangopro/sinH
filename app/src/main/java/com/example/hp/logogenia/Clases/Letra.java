@@ -3,11 +3,13 @@ package com.example.hp.logogenia.Clases;
 public class Letra {
 
     private String letra;
-    private int img;
+    private int imgLetra;
+    private int imgSena;
 
-    public Letra(String letra, int img) {
+    public Letra(String letra, int imgLetra, int imgSena) {
         this.letra = letra;
-        this.img = img;
+        this.imgLetra = imgLetra;
+        this.imgSena = imgSena;
     }
 
     public String getLetra() {
@@ -18,11 +20,19 @@ public class Letra {
         this.letra = letra;
     }
 
-    public int getImg() {
-        return img;
+    public int getImgLetra() {
+        return imgLetra;
     }
 
-    public void setImg(int img) {
-        this.img = img;
+    public void setImgLetra(int imgLetra) {
+        this.imgLetra = imgLetra;
+    }
+
+    public int getImgSena() {
+        return imgSena;
+    }
+
+    public void setImgSena(int imgSena) {
+        this.imgSena = imgSena;
     }
 }

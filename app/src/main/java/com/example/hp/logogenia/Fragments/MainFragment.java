@@ -15,7 +15,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private LinearLayout llShowSenas,llShowDacti,llSReadWrite;
-    private Button btnSenas,btnDactilogo,btnLeerEsc,btnDiccionario;
+    private Button btnSenas,btnDactilogo,btnLeerEsc,btnDiccionario,btnPresentW;
     private boolean senas = true, dacti = true, leerEsc = true;
 
     @Override
@@ -33,6 +33,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         btnDactilogo = view.findViewById(R.id.btnDactilogo);
         btnLeerEsc = view.findViewById(R.id.btnLeerEsc);
         btnDiccionario = view.findViewById(R.id.btnDiccionario);
+        btnPresentW = view.findViewById(R.id.btnPresentW);
         llSReadWrite = view.findViewById(R.id.llSReadWrite);
         llShowSenas = view.findViewById(R.id.llShowSenas);
         llShowDacti = view.findViewById(R.id.llShowDacti);
@@ -40,6 +41,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         btnDactilogo.setOnClickListener(this);
         btnLeerEsc.setOnClickListener(this);
         btnDiccionario.setOnClickListener(this);
+        btnPresentW.setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +61,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 break;
             }case R.id.btnDiccionario:{
 
+                break;
+            }case R.id.btnPresentW:{
+                PresenteWFragment nextFrag= new PresenteWFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.FrFragment, nextFrag,"findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }
         }

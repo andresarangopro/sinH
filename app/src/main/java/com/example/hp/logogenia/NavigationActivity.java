@@ -100,7 +100,7 @@ public class NavigationActivity extends AppCompatActivity
             fragment = new MainFragment();
 
         } else if (id == R.id.nav_slideshow) {
-            fragment = new PresenteWFragment();
+           // fragment = new PresenteWFragment();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

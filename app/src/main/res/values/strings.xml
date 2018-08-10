@@ -16,7 +16,32 @@
     <string name="str_read">Leer</string>
     <string name="str_write">Escribir</string>
     <string name="str_diccionario">Diccionario</string>
-
+    <string name="str_a">a</string>
+    <string name="str_b">b</string>
+    <string name="str_c">c</string>
+    <string name="str_d">d</string>
+    <string name="str_e">e</string>
+    <string name="str_f">f</string>
+    <string name="str_g">g</string>
+    <string name="str_h">h</string>
+    <string name="str_i">i</string>
+    <string name="str_j">j</string>
+    <string name="str_k">k</string>
+    <string name="str_l">l</string>
+    <string name="str_m">m</string>
+    <string name="str_n">n</string>
+    <string name="str_o">o</string>
+    <string name="str_p">p</string>
+    <string name="str_q">q</string>
+    <string name="str_r">r</string>
+    <string name="str_s">s</string>
+    <string name="str_t">t</string>
+    <string name="str_u">u</string>
+    <string name="str_v">v</string>
+    <string name="str_w">w</string>
+    <string name="str_x">x</string>
+    <string name="str_y">y</string>
+    <string name="str_z">z</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

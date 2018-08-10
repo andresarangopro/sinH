@@ -33,7 +33,7 @@ public class RALetters extends RecyclerView.Adapter<RALetters.ViewHolder> {
          * Variables
          **********************/
         TextView tvLetter;
-        ImageView iVLetter;
+        ImageView iVLetter,iVSena;
         View thisView;
 
         /**********************
@@ -43,6 +43,7 @@ public class RALetters extends RecyclerView.Adapter<RALetters.ViewHolder> {
             super(itemView);
             tvLetter = itemView.findViewById(R.id.tvLetter);
             iVLetter = itemView.findViewById(R.id.iVLetter);
+            iVSena = itemView.findViewById(R.id.iVSena);
             thisView = itemView;
         }
     }
@@ -67,7 +68,14 @@ public class RALetters extends RecyclerView.Adapter<RALetters.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Letra letra = mData.get(position);
         holder.tvLetter.setText(letra.getLetra());
-        Glide.with(mContext).load(letra.getImg()).into(holder.iVLetter);
+        Glide.with(mContext).load(letra.getImgLetra()).into(holder.iVLetter);
+        Glide.with(mContext).load(letra.getImgSena()).into(holder.iVSena);
+        holder.thisView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, letra.getLetra(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
