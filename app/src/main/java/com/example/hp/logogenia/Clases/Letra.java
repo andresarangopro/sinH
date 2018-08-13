@@ -1,16 +1,20 @@
 package com.example.hp.logogenia.Clases;
 
-public class Letra {
+import java.io.Serializable;
+
+public class Letra implements Serializable{
 
     private String letra;
-    private int imgLetra;
-    private int imgSena;
+    private String imgLetra;
+    private String imgSena;
 
-    public Letra(String letra, int imgLetra, int imgSena) {
+    public Letra(String letra, String imgLetra, String imgSena) {
         this.letra = letra;
         this.imgLetra = imgLetra;
         this.imgSena = imgSena;
     }
+
+    public Letra(){}
 
     public String getLetra() {
         return letra;
@@ -20,19 +24,19 @@ public class Letra {
         this.letra = letra;
     }
 
-    public int getImgLetra() {
+    public String getImgLetra() {
         return imgLetra;
     }
 
-    public void setImgLetra(int imgLetra) {
+    public void setImgLetra(String imgLetra) {
         this.imgLetra = imgLetra;
     }
 
-    public int getImgSena() {
+    public String getImgSena() {
         return imgSena;
     }
 
-    public void setImgSena(int imgSena) {
+    public void setImgSena(String imgSena) {
         this.imgSena = imgSena;
     }
 }

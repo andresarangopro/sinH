@@ -1,6 +1,5 @@
 package com.example.hp.logogenia.Fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,13 +16,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private LinearLayout llShowSenas,llShowDacti,llSReadWrite;
     private Button btnSenas,btnDactilogo,btnLeerEsc,btnDiccionario,btnPresentW;
     private boolean senas = true, dacti = true, leerEsc = true;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_main, container, false);
         // Inflate the layout for this fragment
+
         init();
         return view;
     }
@@ -64,6 +63,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 break;
             }case R.id.btnPresentW:{
                 PresenteWFragment nextFrag= new PresenteWFragment();
+                getActivity().getFragmentManager().popBackStack();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.FrFragment, nextFrag,"findThisFragment")
                         .addToBackStack(null)

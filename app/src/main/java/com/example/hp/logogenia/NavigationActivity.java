@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.hp.logogenia.Fragments.MainFragment;
-import com.example.hp.logogenia.Fragments.PresenteWFragment;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -94,7 +93,7 @@ public class NavigationActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_perfil) {
             // Handle the camera action
         } else if (id == R.id.nav_main) {
             fragment = new MainFragment();
