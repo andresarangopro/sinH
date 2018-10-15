@@ -59,7 +59,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                leerEsc =  goneVisible(llSReadWrite,leerEsc);
                 break;
             }case R.id.btnDiccionario:{
-
+                DiccionarioFragment nextFrag= new DiccionarioFragment();
+                getActivity().getFragmentManager().popBackStack();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.FrFragment, nextFrag,"findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
                 break;
             }case R.id.btnPresentW:{
                 PresenteWFragment nextFrag= new PresenteWFragment();

@@ -11,35 +11,43 @@ import android.util.Log;
 import com.example.hp.logogenia.Clases.Imagen;
 import com.example.hp.logogenia.Clases.Letra;
 import com.example.hp.logogenia.Clases.Palabra;
+import com.example.hp.logogenia.Clases.PalabraImagen;
 import com.example.hp.logogenia.Clases.Video;
+import com.example.hp.logogenia.Fragments.PalabrasFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Logog.db";
 
-    public static final String tablePalabras = "palabras";
-    public static final String tableLetras = "letras";
-    public static final String tableImagenes= "imagenes";
-    public static final String tableVideos = "videos";
+    public static final String tablePalabras = "Palabras";
+    public static final String tableLetras = "Letras";
+    public static final String tableImagenes= "Imagenes";
+    public static final String tableVideos = "Videos";
+    public static final String tableTipoImagen = "TiposImagenes";
+    public static final String tableCuentos= "Cuentos";
+    public static final String tableTema= "Temas";
+    public static final String tablePalabrasImagenes= "PalabrasImagenes";
 
+    private static String idLetra = "idLetra";
 
-    private static String palabraColumnP = "palabra";
-    private static String fkLetra = "id_letra";
-    private static String fkimgColumnP = "id_imagenP";
-    private static String fkvideoColumnP = "id_video";
+    private static String idVideo = "idVideo";
 
-    private static String letraC = "letra";
-    private static String fkimgColumnLl = "id_imagenLetra";
-    private static String fkimgColumnLS = "id_imagenSena";
+    private static String idTipoImagen = "idTImagen";
+    private static String nmTipo = "nmTipo";
 
-    private static String pathImg = "pathImagen";
+    private static String idImagen = "idImagen";
 
-    private static String pathVid = "pathVideo";
+    private static String idPalabra = "idPalabra";
 
+    private static String idCuento = "idCuento";
+
+    private static String idTema = "idTema";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -53,75 +61,64 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
 
-        sqLiteDatabase.execSQL("CREATE TABLE " + tableImagenes + " ("
-                + pathImg+ " VARCHAR(25) PRIMARY KEY NOT NULL"+  ")");
-
-        sqLiteDatabase.execSQL("CREATE TABLE " + tableVideos + " ("
-                + pathVid+ " VARCHAR(25) PRIMARY KEY NOT NULL"+ ")");
-
-        sqLiteDatabase.execSQL("CREATE TABLE " + tableLetras + " ("
-                + letraC + " VARCHAR(25) PRIMARY KEY NOT NULL,"
-                + fkimgColumnLl+ " VARCHAR(25) NOT NULL,"
-                + fkimgColumnLS + " VARCHAR(25) NOT NULL,"
-                +"FOREIGN KEY("+fkimgColumnLl+")REFERENCES "+tableImagenes+"("+pathImg+")"+
-
+        sqLiteDatabase.execSQL("CREATE TABLE " + tableTipoImagen + " ("
+                +idTipoImagen+ " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,"
+                +nmTipo+ " VARCHAR(25) NOT NULL"+
                 ")");
 
-        sqLiteDatabase.execSQL("CREATE TABLE " + tablePalabras + " ("
-                + palabraColumnP + " TEXT PRIMARY KEY NOT NULL,"
-                + fkLetra + " VARCHAR(25)  NOT NULL,"
-                + fkimgColumnP+ " INTEGER NOT NULL,"
-                + fkvideoColumnP+ " INTEGER NOT NULL,"
-                +"FOREIGN KEY("+fkLetra+")REFERENCES "+tableLetras+"("+letraC+"),"
-                +"FOREIGN KEY("+fkimgColumnP+")REFERENCES "+tableImagenes+"("+pathImg+"),"+
-                "FOREIGN KEY("+fkvideoColumnP+")REFERENCES "+tableVideos+"("+pathVid+")"+
+        sqLiteDatabase.execSQL("CREATE TABLE " + tableImagenes + " ("
+                +idImagen+ " VARCHAR(25) PRIMARY KEY NOT NULL"+
+                ")");
+
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + tablePalabras + "("
+                + idPalabra + " TEXT PRIMARY KEY NOT NULL,"
+                + idVideo+ "  VARCHAR(25) NOT NULL,"
+                + idLetra +" VARCHAR(5)  NOT NULL"+
+                ")");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + tableCuentos + " ("
+                +idCuento+ " VARCHAR(25) PRIMARY KEY NOT NULL"+
+                ")");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + tableTema + " ("
+                +idTema+ " VARCHAR(25) PRIMARY KEY NOT NULL"+
+                ")");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + tablePalabrasImagenes + "("
+                + idPalabra + " TEXT NOT NULL,"
+                + idImagen+ " VARCHAR(25) NOT NULL,"
+                + "PRIMARY KEY ("+idPalabra+", "+idImagen+"),"
+                +"FOREIGN KEY("+idPalabra+")REFERENCES "+tablePalabras+"("+idPalabra+"),"
+                +"FOREIGN KEY("+idImagen+")REFERENCES "+tableImagenes+"("+idImagen+")"+
                 ")");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("drop table if exists " + tableImagenes);
-        sqLiteDatabase.execSQL("drop table if exists " + tableVideos);
-        sqLiteDatabase.execSQL("drop table if exists " + tableLetras);
         sqLiteDatabase.execSQL("drop table if exists " + tablePalabras);
+        sqLiteDatabase.execSQL("drop table if exists " + tablePalabrasImagenes);
         onCreate(sqLiteDatabase);
     }
 
-    public List<Palabra> findAll(){
-        try {
-            List<Palabra> listW = new ArrayList<>();
-            SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-            Cursor cursor = sqLiteDatabase.rawQuery("select * from "+ tablePalabras, null);
-            if(cursor.moveToFirst()){
-                Palabra palabra = new Palabra();
-                palabra.setPalabra(cursor.getString(0));
-                palabra.setLetra(cursor.getString(1));
-                palabra.setImg(cursor.getString(2));
-                palabra.setVideo(cursor.getString(3));
-            }
-            sqLiteDatabase.close();
-            return listW;
-        }catch (Exception e){
-            return null;
-        }
 
-    }
+
+    //=================================================
+    //= Select Values from  database
+    //=================================================
 
     public List<Imagen> getAllImgs() {
         List<Imagen> imagenesList = new ArrayList<>();
         String selectQuery = "SELECT  * FROM " + tableImagenes;
-
         Log.e("LOG", selectQuery);
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
-
         // looping through all rows and adding to list
         if (c.moveToFirst()) {
             do {
                 Imagen img = new Imagen();
-                img.setPath((c.getString(c.getColumnIndex(pathImg))));
-
+                img.setPath((c.getString(c.getColumnIndex(idImagen))));
                 // adding to todo list
                 imagenesList.add(img);
             } while (c.moveToNext());
@@ -130,27 +127,9 @@ public class DbHelper extends SQLiteOpenHelper {
         return imagenesList;
     }
 
-    public List<Video> getAllVideos() {
-        List<Video> videosList = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + tableVideos;
-        Log.e("LOG", selectQuery);
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
-        if (c.moveToFirst()) {
-            do {
-                Video vid = new Video();
-                vid.setPath((c.getString(c.getColumnIndex(pathVid))));
-                // adding to todo list
-                videosList.add(vid);
-            } while (c.moveToNext());
-        }
-        return videosList;
-    }
-
-    public List<Letra> getAllLetters() {
+    public List<Letra> getAllWordsXImg() {
         List<Letra> letrasList = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + tableLetras;
+        String selectQuery = "SELECT "+idPalabra+", "+idImagen+" FROM " +tablePalabrasImagenes +" WHERE LENGTH("+idPalabra+") <= 1 GROUP BY "+idPalabra+", "+idImagen+"" ;
         Log.e("LOG", selectQuery);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -158,20 +137,22 @@ public class DbHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Letra letr = new Letra();
-                letr.setLetra(c.getString(c.getColumnIndex(letraC)));
-                letr.setImgLetra(c.getString(c.getColumnIndex(fkimgColumnLl)));
-                letr.setImgSena(c.getString(c.getColumnIndex(fkimgColumnLS)));
+                letr.setLetra(c.getString(c.getColumnIndex(idPalabra)));
+                letr.setImgLetra(c.getString(c.getColumnIndex(idImagen)));
+                c.move(1);
+                letr.setImgSena(c.getString(c.getColumnIndex(idImagen)));
 
                 // adding to todo list
                 letrasList.add(letr);
+
             } while (c.moveToNext());
         }
         return letrasList;
     }
 
-    public List<Palabra> getListWords(Letra letra) {
+    public List<Palabra> getListLetters(Letra letra) {
         List<Palabra> palabrasList = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + tablePalabras +" WHERE "+fkLetra+" = '"+letra.getLetra()+"'" ;
+        String selectQuery = "SELECT * FROM " + tablePalabras +" WHERE "+idLetra+" = '"+letra.getLetra()+"'" ;
         Log.e("LOG", selectQuery);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -179,11 +160,10 @@ public class DbHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Palabra word = new Palabra();
-                word.setPalabra(c.getString(c.getColumnIndex(palabraColumnP)));
-                word.setLetra(c.getString(c.getColumnIndex(fkLetra)));
-                word.setImg(c.getString(c.getColumnIndex(fkimgColumnP)));
-                word.setVideo(c.getString(c.getColumnIndex(fkvideoColumnP)));
-
+                word.setPalabra(c.getString(c.getColumnIndex(idPalabra)));
+                word.setLetra(c.getString(c.getColumnIndex(idLetra)));
+                word.setVideo(c.getString(c.getColumnIndex(idVideo)));
+                Log.e("tab",c.getString(c.getColumnIndex(idPalabra))+"--");
                 // adding to todo list
                 palabrasList.add(word);
             } while (c.moveToNext());
@@ -191,6 +171,58 @@ public class DbHelper extends SQLiteOpenHelper {
         return palabrasList;
     }
 
+
+    public Map<String,PalabraImagen> getListWordsImgXLet(Letra letra) {
+        Map<String,PalabraImagen> mapwordXimg = new HashMap<String,PalabraImagen>();
+        String selectQuery = "SELECT "+tablePalabrasImagenes+"."+idPalabra+ ", "+tablePalabrasImagenes+"."+idImagen+" "+
+                " FROM " + tablePalabrasImagenes
+                +" INNER JOIN "+tablePalabras+" ON  "+tablePalabrasImagenes+"."+idPalabra+" = "+tablePalabras+"."+idPalabra+" " +
+                "WHERE "+idLetra+" = '"+letra.getLetra()+"'";
+        Log.e("LOG", selectQuery);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                PalabraImagen wordImg = new PalabraImagen();
+                String word = c.getString(c.getColumnIndex(idPalabra));
+                wordImg.setPalabra(word);
+                wordImg.setImg(c.getString(c.getColumnIndex(idImagen)));
+
+
+                Log.e("tab",c.getString(c.getColumnIndex(idPalabra))+"");
+                // adding to todo list
+               mapwordXimg.put(word, wordImg);
+            } while (c.moveToNext());
+        }
+        return mapwordXimg;
+    }
+
+    public Map<String,PalabraImagen> getListAllWordsXImg () {
+        Map<String,PalabraImagen> mapwordXimg = new HashMap<String,PalabraImagen>();
+        String selectQuery = "SELECT "+tablePalabrasImagenes+"."+idPalabra+ ", "+tablePalabrasImagenes+"."+idImagen+" "+
+                " FROM " + tablePalabrasImagenes
+                +" INNER JOIN "+tablePalabras+" ON  "+tablePalabrasImagenes+"."+idPalabra+" = "+tablePalabras+"."+idPalabra+" " ;
+
+        Log.e("LOG", selectQuery);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                PalabraImagen wordImg = new PalabraImagen();
+                String word = c.getString(c.getColumnIndex(idPalabra));
+                wordImg.setPalabra(word);
+                wordImg.setImg(c.getString(c.getColumnIndex(idImagen)));
+
+
+                Log.e("tab",c.getString(c.getColumnIndex(idPalabra))+"");
+                // adding to todo list
+                mapwordXimg.put(word, wordImg);
+            } while (c.moveToNext());
+        }
+        return mapwordXimg;
+    }
 
     public List<Palabra> getListAllWord() {
         List<Palabra> palabrasList = new ArrayList<>();
@@ -202,10 +234,10 @@ public class DbHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Palabra word = new Palabra();
-                word.setPalabra(c.getString(c.getColumnIndex(palabraColumnP)));
-                word.setLetra(c.getString(c.getColumnIndex(fkLetra)));
-                word.setImg(c.getString(c.getColumnIndex(fkimgColumnP)));
-                word.setVideo(c.getString(c.getColumnIndex(fkvideoColumnP)));
+                word.setPalabra(c.getString(c.getColumnIndex(idPalabra)));
+                word.setLetra(c.getString(c.getColumnIndex(idLetra)));
+               // word.setImg(c.getString(c.getColumnIndex(fkimgColumnP)));
+                word.setVideo(c.getString(c.getColumnIndex(idVideo)));
 
                 // adding to todo list
                 palabrasList.add(word);
@@ -214,41 +246,51 @@ public class DbHelper extends SQLiteOpenHelper {
         return palabrasList;
     }
 
+    public List<PalabraImagen> getListAllWordImg() {
+        List<PalabraImagen> palabrasImgList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + tablePalabrasImagenes;
+        Log.e("LOG", selectQuery);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                PalabraImagen wordImg = new PalabraImagen();
+                wordImg.setPalabra(c.getString(c.getColumnIndex(idPalabra)));
+                wordImg.setImg(c.getString(c.getColumnIndex(idImagen)));
+                // adding to todo list
+                palabrasImgList.add(wordImg);
+            } while (c.moveToNext());
+        }
+        return palabrasImgList;
+    }
+
+    //=================================================
+    //= Insert Values to database
+    //=================================================
+
     /*
      * Creating a imagen
      */
     public long createImg(Imagen img) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(pathImg, img.getPath());
-        // insert row
+        values.put(idImagen, img.getPath());
         long img_id = db.insert(tableImagenes, null, values);
         return img_id;
-    }
-    /*
-     * Creating a video
-     */
-    public long createVideo(Video video) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(pathVid, video.getPath());
-        // insert row
-        long video_id = db.insert(tableVideos, null, values);
-        return video_id;
     }
 
     /*
      * Creating a letter
      */
-    public long createLetra(Letra letra) {
+    public long createPalabraImg(PalabraImagen wordImg) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(letraC, letra.getLetra());
-        values.put(fkimgColumnLl, letra.getImgLetra());
-        values.put(fkimgColumnLS, letra.getImgSena());
-        // insert row
-        long letra_id = db.insert(tableLetras, null, values);
-        return letra_id;
+        values.put(idImagen, wordImg.getImg());
+        values.put(idPalabra, wordImg.getPalabra());
+
+        long wordImg_id = db.insert(tablePalabrasImagenes, null, values);
+        return wordImg_id;
     }
 
     /*
@@ -257,14 +299,17 @@ public class DbHelper extends SQLiteOpenHelper {
     public long createWord(Palabra palabra) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(palabraColumnP, palabra.getPalabra());
-        values.put(fkLetra, palabra.getLetra());
-        values.put(fkimgColumnP, palabra.getImg());
-        values.put(fkvideoColumnP, palabra.getVideo());
-        // insert row
+        values.put(idPalabra, palabra.getPalabra());
+        values.put(idLetra, palabra.getLetra());
+        values.put(idVideo, palabra.getVideo());
+
         long palabra_id = db.insert(tablePalabras, null, values);
         return palabra_id;
     }
+
+    //=================================================
+    //= Meotodos database
+    //=================================================
 
     public boolean isTableExists(String nombreTabla) {
         boolean isExist = false;

@@ -1,7 +1,6 @@
 package com.example.hp.logogenia;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,7 @@ import com.example.hp.logogenia.Util.PrepareData;
 import static com.example.hp.logogenia.Util.DbHelper.tableImagenes;
 import static com.example.hp.logogenia.Util.DbHelper.tableLetras;
 import static com.example.hp.logogenia.Util.DbHelper.tablePalabras;
+import static com.example.hp.logogenia.Util.DbHelper.tablePalabrasImagenes;
 import static com.example.hp.logogenia.Util.DbHelper.tableVideos;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,21 +41,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 prepareData.putImgsInDB();
             }
         }
-        if(db.isTableExists(tableVideos)){
-            if(db.getAllVideos().size() <= 0){
-                prepareData.putVideosInDB();
-            }
-        }
-        if(db.isTableExists(tableLetras)){
-            if(db.getAllLetters().size() <= 0){
-                prepareData.putLetrasInDB();
-            }
-        }
+
        if(db.isTableExists(tablePalabras)){
            if(db.getListAllWord().size() <= 0){
                prepareData.putPalabrasInDB();
            }
        }
+
+        if(db.isTableExists(tablePalabrasImagenes)){
+            if(db.getListAllWordImg().size() <= 0){
+                 prepareData.putPalabraImagenInDB();
+            }
+        }
     }
 
 

@@ -4,15 +4,13 @@ import android.widget.VideoView;
 
 public class Palabra {
 
-    private String letra;
-    private String palabra;
-    private String img;
+    protected String letra;
+    protected String palabra;
     private String video;
 
-    public Palabra(String letra, String palabra, String img, String video) {
+    public Palabra(String letra, String palabra, String video) {
         this.letra = letra;
         this.palabra = palabra;
-        this.img = img;
         this.video = video;
     }
 
@@ -32,14 +30,6 @@ public class Palabra {
 
     public void setPalabra(String palabra) {
         this.palabra = palabra;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
     }
 
     public String getVideo() {

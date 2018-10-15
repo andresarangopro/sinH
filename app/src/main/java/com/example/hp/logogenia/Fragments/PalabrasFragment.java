@@ -17,10 +17,12 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.example.hp.logogenia.Clases.Letra;
 import com.example.hp.logogenia.Clases.Palabra;
+import com.example.hp.logogenia.Clases.PalabraImagen;
 import com.example.hp.logogenia.Util.DbHelper;
 import com.example.hp.logogenia.R;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +37,8 @@ public class PalabrasFragment extends Fragment implements View.OnClickListener{
     private Bundle args;
     private Letra letr;
     private List<Palabra> listPalabras;
-    private int count;
+    private Map<String,PalabraImagen> imagenXWord;
+    private int count = 0;
     private DbHelper db;
 
 
@@ -73,6 +76,7 @@ public class PalabrasFragment extends Fragment implements View.OnClickListener{
         args = getArguments();
         letr = (Letra) args.getSerializable("letr");
         listPalabras = prube();
+        imagenXWord = mapLetters();
         if(listPalabras.size() > 0) {
             nextWord(count);
         }
@@ -91,13 +95,12 @@ public class PalabrasFragment extends Fragment implements View.OnClickListener{
             }case R.id.btnStop:{
                 video.stopPlayback();
                 video.seekTo(0);
-                video.setVideoPath(listPalabras.get(count).getVideo());
-
+                putStRe();
                 break;
             }case R.id.btnRepeat:{
                 video.stopPlayback();
                 video.seekTo(0);
-                video.setVideoPath(listPalabras.get(count).getVideo());
+                putStRe();
                 video.start();
                 break;
             }case R.id.btnNext:{
@@ -126,17 +129,18 @@ public class PalabrasFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private List<Palabra>  prube(){
-        List<Palabra> llWords = db.getListWords(letr);
-        for (Palabra word:llWords) {
-            Log.d("Tag words", word.getPalabra()+" -- "+word.getLetra()+" -- "+word.getImg());
-        }
+    private List<Palabra> prube(){
+        List<Palabra> llWords = db.getListLetters(letr);
         return llWords;
-
+    }
+    private Map<String,PalabraImagen> mapLetters(){
+        Map<String,PalabraImagen> imagenXWord = db.getListWordsImgXLet(letr);
+        return imagenXWord;
     }
 
     private void nextWord(int count){
-        int imglet = getResources().getIdentifier(listPalabras.get(count).getImg() , "drawable", getActivity().getPackageName());
+        Log.e("w",listPalabras.get(count).getPalabra());
+        int imglet = getResources().getIdentifier(imagenXWord.get(listPalabras.get(count).getPalabra()).getImg() , "drawable", getActivity().getPackageName());
         int videoDraw = getResources().getIdentifier(listPalabras.get(count).getVideo(), "raw", getActivity().getPackageName());
         String pathVideo = "android.resource://" + getActivity().getPackageName() + "/" + videoDraw;
 
@@ -144,5 +148,11 @@ public class PalabrasFragment extends Fragment implements View.OnClickListener{
         Glide.with(view.getContext()).load(imglet).into(iVPalabra);
         tVPalabra.setText(listPalabras.get(count).getPalabra());
         video.start();
+    }
+
+    private void putStRe(){
+        int videoDraw = getResources().getIdentifier(listPalabras.get(count).getVideo(), "raw", getActivity().getPackageName());
+        String pathVideo = "android.resource://" + getActivity().getPackageName() + "/" + videoDraw;
+        video.setVideoPath(pathVideo);
     }
 }

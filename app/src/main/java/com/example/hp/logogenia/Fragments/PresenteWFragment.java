@@ -50,8 +50,7 @@ public class PresenteWFragment extends Fragment {
     }
 
     private void prepare(){
-        List<Letra> allLetters = db.getAllLetters();
-
+        List<Letra> allLetters = db.getAllWordsXImg();
         for (Letra letra:allLetters) {
             Letra letr = letra;
             letraList.add(letr);

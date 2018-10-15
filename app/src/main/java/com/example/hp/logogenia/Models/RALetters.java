@@ -90,8 +90,6 @@ public class RALetters extends RecyclerView.Adapter<RALetters.ViewHolder> {
             public void onClick(View view) {
                // Toast.makeText(mContext, letra.getLetra(), Toast.LENGTH_SHORT).show();
                 PalabrasFragment nextFrag= new PalabrasFragment();
-
-
                 args.putSerializable("letr",letra);
                 nextFrag.setArguments(args);
                 fragmentActivity.getFragmentManager().popBackStack();
