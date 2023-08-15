@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Logogenia"
 include(":app")
- 
+include(":data")
+include(":domain")
