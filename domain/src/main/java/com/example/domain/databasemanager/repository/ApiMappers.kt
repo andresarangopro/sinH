@@ -10,3 +10,11 @@ fun List<WordEntity>.toWordList():List<Word> = this.map {
         )
     }
 }
+
+fun List<Word>.toWordEntityList():List<WordEntity> = this.map {
+    it.run {
+        WordEntity(
+          word, letter, image, video
+        )
+    }
+}
