@@ -3,9 +3,9 @@ package com.example.logogenia.presentation.ui.home
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,7 +18,6 @@ import com.example.logogenia.components.RowOptionsNavigation
 import com.example.logogenia.presentation.navigation.KEY_CONTENT_PAGE_INDEX
 import com.example.logogenia.presentation.navigation.NavRoute
 import com.example.logogenia.presentation.navigation.getOrThrow
-import com.example.logogenia.presentation.ui.knowingWords.KnowingWordsRoute
 import com.example.logogenia.presentation.ui.theme.GrayLight
 import com.example.logogenia.presentation.ui.theme.LogogeniaTheme
 
@@ -29,7 +28,7 @@ object HomeRoute : NavRoute<HomeViewModel> {
     /**
      * Returns the route that can be used for navigating to this page.
      */
-    fun get(index: Int): String = KnowingWordsRoute.route.replace("{$KEY_CONTENT_PAGE_INDEX}", "$index")
+    fun get(index: Int): String = route.replace("{$KEY_CONTENT_PAGE_INDEX}", "$index")
 
     fun getIndexFrom(savedStateHandle: SavedStateHandle) =
         savedStateHandle.getOrThrow<Int>(KEY_CONTENT_PAGE_INDEX)
@@ -55,14 +54,16 @@ fun ContentPage(
         Column(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
                 .background(GrayLight)
                 .padding(8.dp)
 
         ) {
 
-            RowOptionsNavigation(homeViewModel.cards, "Señas")
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())){
+                RowOptionsNavigation(homeViewModel.cards, "Señas")
+                RowOptionsNavigation(homeViewModel.cards2, "Dactilológico")
+                RowOptionsNavigation(homeViewModel.cards3, "Leer y Escribir")
+            }
         }
     }
 }

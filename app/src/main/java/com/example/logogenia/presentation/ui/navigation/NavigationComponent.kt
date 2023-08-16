@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import com.example.logogenia.presentation.navigation.INavigationComponent
 import com.example.logogenia.presentation.ui.home.HomeRoute
 import com.example.logogenia.presentation.ui.knowingWords.KnowingWordsRoute
+import com.example.logogenia.presentation.ui.wordDetail.WordDetailRoute
 
 class NavigationMainComponent: INavigationComponent {
 
@@ -24,6 +25,7 @@ class NavigationMainComponent: INavigationComponent {
         ) {
             HomeRoute.composable(this, navHostController)
             KnowingWordsRoute.composable(this, navHostController)
+            WordDetailRoute.composable(this, navHostController)
         }
     }
 

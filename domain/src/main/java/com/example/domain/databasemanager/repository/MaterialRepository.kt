@@ -6,5 +6,6 @@ import com.old.domain.model.Failure
 
 interface MaterialRepository {
     fun wordsByLetter(letter: Char): Either<Failure, List<Word>>
+    fun getAllWords(): Either<Failure, List<Word>>
     fun initialSetup(listWords: List<Word>): Either<Failure, Long>
 }

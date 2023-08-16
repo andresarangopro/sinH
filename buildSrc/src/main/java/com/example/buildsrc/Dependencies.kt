@@ -19,6 +19,7 @@ object Versions {
     const val navigationVersion = "2.4.2"
     const val material3Version = "1.0.0-alpha13"
     const val navigationAnimation = "0.26.5-rc"
+    const val exoPlayer = "1.0.0-rc01"
 }
 
 object DebugDependencies{
@@ -103,6 +104,13 @@ object AppDependencies {
         "androidx.compose.material3:material3-window-size-class:${Versions.material3Version}"
     private const val navigationAnimation =
         "com.google.accompanist:accompanist-navigation-animation:${Versions.navigationAnimation}"
+    private const val mediaExoPlayer =
+        "androidx.media3:media3-exoplayer:${Versions.exoPlayer}"
+    private const val exoPlayerDash =
+        "androidx.media3:media3-exoplayer-dash:${Versions.exoPlayer}"
+    private const val exoPlayerMedia =
+        "androidx.media3:media3-ui:${Versions.exoPlayer}"
+
 
     //test libs
     //testImplementation
@@ -147,6 +155,12 @@ object AppDependencies {
 
     val hiltLibraries = arrayListOf<String>().apply {
         add(Hilt.android)
+    }
+
+    val exoPlayerLibraries = arrayListOf<String>().apply {
+        add(AppDependencies.exoPlayerDash)
+        add(AppDependencies.exoPlayerMedia)
+        add(AppDependencies.mediaExoPlayer)
     }
 
     val retrofitLibraries = arrayListOf<String>().apply {

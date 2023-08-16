@@ -20,6 +20,18 @@ class HomeViewModel @Inject constructor(
         NavigationComponent(R.drawable.how_start_img, "¿Cómo empieza esta palabra?",
             { toKnowingWords() })
     )
+    val cards2 = listOf(
+        NavigationComponent(R.drawable.word_presentation, "Te presento las letras",
+            { toKnowingWords() }),
+        NavigationComponent(R.drawable.how_start_img, "¿Qué letra es?",
+            { toKnowingWords() })
+    )
+    val cards3 = listOf(
+        NavigationComponent(R.drawable.word_presentation, "Leer",
+            { toKnowingWords() }),
+        NavigationComponent(R.drawable.how_start_img, "Escribir",
+            { toKnowingWords() })
+    )
 
     fun toKnowingWords(){
         Log.d("DIOS","uhmmm")

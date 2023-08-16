@@ -73,6 +73,7 @@ dependencies {
     implementationOwn(AppDependencies.coroutinesLibraries)
     implementationOwn(AppDependencies.retrofitLibraries)
     implementationOwn(AppDependencies.hiltLibraries)
+    implementationOwn(AppDependencies.exoPlayerLibraries)
     //test libs
     testImplementationOwn(AppDependencies.testLibraries)
     androidTestImplementationOwn(AppDependencies.androidTestLibraries)

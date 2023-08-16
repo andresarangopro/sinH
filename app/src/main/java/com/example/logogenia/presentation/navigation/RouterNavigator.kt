@@ -1,5 +1,6 @@
 package com.example.logogenia.presentation.navigation
 
+import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +23,7 @@ interface RouteNavigator {
     fun navigateToRoute(route: String)
 
     val navigationState: StateFlow<NavigationState>
+    val bundleState: StateFlow<Bundle>
 }
 
 class LogogeniaRouteNavigator : RouteNavigator {
@@ -33,6 +35,9 @@ class LogogeniaRouteNavigator : RouteNavigator {
      */
     override val navigationState: MutableStateFlow<NavigationState> =
         MutableStateFlow(NavigationState.Idle)
+
+    override val bundleState: MutableStateFlow<Bundle> =
+        MutableStateFlow(Bundle())
 
     override fun onNavigated(state: NavigationState) {
         // clear navigation state, if state is the current state:
@@ -49,5 +54,6 @@ class LogogeniaRouteNavigator : RouteNavigator {
     fun navigate(state: NavigationState) {
         navigationState.value = state
     }
+
 }
 

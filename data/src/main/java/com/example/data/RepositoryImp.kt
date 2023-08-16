@@ -1,17 +1,34 @@
 package com.example.data
 
+import android.util.Log
+import com.example.data.extensions.request
 import com.example.data.platform.NetworkHandler
 import com.example.domain.databasemanager.ILocalDataSource
 import com.example.domain.databasemanager.WordDao
+import com.example.domain.databasemanager.entities.ResultsEntity
+import com.example.domain.databasemanager.entities.WordEntityRemote
 import com.example.domain.databasemanager.localDatabaseEntities.WordEntity
+
 import com.example.domain.databasemanager.model.Word
+import com.example.domain.databasemanager.repository.MaterialApi
 import com.example.domain.databasemanager.repository.MaterialRepository
 import com.example.domain.databasemanager.repository.toWordEntityList
 import com.example.domain.databasemanager.repository.toWordList
+import com.example.domain.databasemanager.repository.toWordsList
 import com.old.domain.model.Either
 import com.old.domain.model.Failure
+import retrofit2.Call
+import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
+
+
+@Singleton
+class RemoteDataSource
+@Inject constructor(retrofit: Retrofit) : MaterialApi {
+    private val wordsApi by lazy { retrofit.create(MaterialApi::class.java) }
+    override fun words(): Call<List<WordEntityRemote>> = wordsApi.words()
+}
 
 @Singleton
 class LocalRepositoryDataSourceImp @Inject constructor(private val wordDao: WordDao): ILocalDataSource {
@@ -23,12 +40,13 @@ class LocalRepositoryDataSourceImp @Inject constructor(private val wordDao: Word
         return  wordDao.getAllWordsByLetter(letter)
     }
 
+
     override fun createWords(listWords: List<WordEntity>): Either<Failure, Long> {
         var success = 0L
 
-            listWords.forEach{
-                wordDao.insertWord(it)
-            }
+        listWords.forEach{
+            wordDao.insertWord(it)
+        }
         return try {
             when (success) {
                 0L -> Either.Right(success)
@@ -52,10 +70,32 @@ class LocalRepositoryDataSourceImp @Inject constructor(private val wordDao: Word
 class RepositoryImp
 @Inject constructor(
     private val networkHandler: NetworkHandler,
+    private val remoteDataSource: RemoteDataSource,
     private val localMaterialRepository: LocalRepositoryDataSourceImp
 ) : MaterialRepository {
     override fun wordsByLetter(letter: Char): Either<Failure, List<Word>> {
         return getLocalWords(letter)
+    }
+
+    override fun getAllWords(): Either<Failure, List<Word>> {
+        val request: Either<Failure, List<Word>> = when (networkHandler.isNetworkAvailable()) {
+            true -> {
+            request(
+                remoteDataSource.words(),
+                { it.toWordsList()},
+                emptyList()
+            )
+        }
+            false -> getLocalWords('a')
+        }
+
+        request.fold(
+            fnL = {
+
+            },
+            fnR = {}
+        )
+        return request
     }
 
     override fun initialSetup(listWords: List<Word>): Either<Failure, Long> {
