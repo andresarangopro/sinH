@@ -9,11 +9,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
-import androidx.media3.exoplayer.ExoPlayer
 import com.example.domain.databasemanager.model.Word
+import com.example.domain.databasemanager.usecases.GetWordsByLetterUseCase
 import com.example.domain.databasemanager.usecases.GetWordsUseCase
 import com.example.logogenia.presentation.navigation.RouteNavigator
 import com.old.domain.model.Failure
@@ -27,7 +26,7 @@ import javax.inject.Inject
 class WordDetailViewModel @Inject constructor(
     val savedStateHandle: SavedStateHandle,
     private val routeNavigator: RouteNavigator,
-    private val getWordsUseCase: GetWordsUseCase,
+    private val getWordsByLetterUseCase: GetWordsByLetterUseCase,
     val player: Player
 ): ViewModel(),RouteNavigator by routeNavigator {
 
@@ -43,8 +42,11 @@ class WordDetailViewModel @Inject constructor(
     private val _status: MutableLiveData<States<WordDetailsStatus>> = MutableLiveData()
     val status: LiveData<States<WordDetailsStatus>> = _status
 
-    private val _videoPosition : MutableLiveData<Int> = MutableLiveData(0)
-    val videoPosition: LiveData<Int> = _videoPosition
+    private val _wordPosition : MutableLiveData<Int> = MutableLiveData(0)
+    val wordPosition: LiveData<Int> = _wordPosition
+
+    private val _word : MutableLiveData<Word> = MutableLiveData()
+    val word: LiveData<Word> = _word
 
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
@@ -79,21 +81,23 @@ class WordDetailViewModel @Inject constructor(
 
     init {
         _letter.value = WordDetailRoute.getStringFrom(savedStateHandle)
-        loadAllWordsData()
+        _letter.value?.let { letter ->
+            loadAllWordsData(letter)
+        }
         Log.d("INNVIEWM", "${allWords.value?.size}")
-
-
-
     }
 
-    private fun loadAllWordsData() =
-        getWordsUseCase(GetWordsUseCase.Params(1), viewModelScope) { it.fold(::handleFailure, ::handleTopRatedMovieList) }
+    private fun loadAllWordsData(letter : String) =
+            getWordsByLetterUseCase(GetWordsByLetterUseCase.Params(letter), viewModelScope) { it.fold(::handleFailure, ::handleTopRatedMovieList) }
+
+
+
 
 
     private fun handleTopRatedMovieList( words: List<Word>) {
         Log.d("INNVIEWM","${words?.size}")
         _allWords.value = words
-
+        _word.value = wordPosition.value?.let { allWords.value?.get(it) }
         player.prepare()
         allWords.value?.forEach {
             mediaItems.add(
@@ -114,7 +118,7 @@ class WordDetailViewModel @Inject constructor(
     }
 
     fun playVideo(){
-        var uri: Uri?= allWords.value!!.get(videoPosition.value?:0).video.toUri()
+        var uri: Uri?= allWords.value!!.get(wordPosition.value?:0).video.toUri()
         player.addMediaItem(MediaItem.fromUri(uri!!))
 
         uri = Uri.parse("https://drive.google.com/file/d/1Zo8cmOYeV6SK4fTcY8eIAdr1zVRDIwPj/view?usp=drive_link")
@@ -124,7 +128,7 @@ class WordDetailViewModel @Inject constructor(
     }
 
     fun addVideoUri(uri: Uri){
-        val uri: Uri?= videoPosition.value?.let { allWords.value?.get(it)?.video?.toUri()}
+        val uri: Uri?= wordPosition.value?.let { allWords.value?.get(it)?.video?.toUri()}
         uri?.let { MediaItem.fromUri(it) }?.let { player.addMediaItem(it) }
     }
 
