@@ -2,9 +2,13 @@ package com.example.logogenia.di
 
 import android.app.Application
 import android.content.Context
+import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.SimpleExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.room.Room
 import com.example.data.RepositoryImp
 import com.example.domain.databasemanager.MaterialDatabase
@@ -74,6 +78,7 @@ class AppModule {
     fun provideVideoPlayer(app: Application): Player{
         return ExoPlayer.Builder(app)
             .build()
+
     }
 
     @Provides

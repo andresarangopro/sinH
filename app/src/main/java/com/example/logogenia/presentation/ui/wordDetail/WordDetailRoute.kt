@@ -8,12 +8,23 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -22,6 +33,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -30,15 +42,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.SavedStateHandle
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.logogenia.components.CardHandler
+import com.example.logogenia.components.LockScreenOrientation
+import com.example.logogenia.components.VideoExoPlayer
+import com.example.logogenia.components.VideoPlayer
 import com.example.logogenia.presentation.navigation.KEY_CONTENT_PAGE_INDEX
 import com.example.logogenia.presentation.navigation.NavRoute
 import com.example.logogenia.presentation.navigation.getOrThrow
@@ -68,25 +86,13 @@ object WordDetailRoute : NavRoute<WordDetailViewModel> {
     override fun Content(viewModel: WordDetailViewModel) =
         ContentPage(viewModel)
 }
-@Composable
-fun LockScreenOrientation(orientation: Int) {
-    val configuration = LocalConfiguration.current
-    val activity = LocalContext.current as? Activity
-    DisposableEffect(configuration.orientation) {
-        activity?.requestedOrientation = orientation
-        onDispose {
-            // restore original orientation when view disappears
-                activity?.requestedOrientation = orientation
-
-        }
-    }
-}
 
 @Composable
 fun ContentPage(
     wordDetailViewModel: WordDetailViewModel
 ) {
     val configuration = LocalConfiguration.current
+   //view(wordDetailViewModel = wordDetailViewModel, screenWidth = configuration.screenWidthDp.dp)
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             Text("Landscape")
@@ -100,9 +106,23 @@ fun ContentPage(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun view( wordDetailViewModel: WordDetailViewModel, screenWidth : Dp){
     LogogeniaTheme{
+        Scaffold(
+            topBar = { CenterAlignedTopAppBar(title = { 
+                Text(text = "Centered")
+            })},
+            content = {
+                LazyRow(contentPadding = it) {
+                    item {
+                        Text(text = "hplñ")
+                    }
+                }
+
+            }
+        )
         Column(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
@@ -112,6 +132,7 @@ fun view( wordDetailViewModel: WordDetailViewModel, screenWidth : Dp){
                 .padding(8.dp)
 
         ) {
+
             val states by wordDetailViewModel.status.observeAsState()
 
             var lifecycle by remember {
@@ -128,40 +149,52 @@ fun view( wordDetailViewModel: WordDetailViewModel, screenWidth : Dp){
                 }
             }
 
+
             states?.getContentIfNotHandled().let {navigation ->
                 when(navigation) {
                     is WordDetailViewModel.WordDetailsStatus.ShowWords -> {
                         wordDetailViewModel.word.value?.let { empty(text = it.word) }
                         val oneThirdScreenWidth = screenWidth - (screenWidth/3)
-                        DisposableEffect(
-                            AndroidView(factory ={context ->
-                                PlayerView(context).also {
-                                    it.player = wordDetailViewModel.player
-                                }
-                            },
-                                modifier = Modifier
-                                    .width(oneThirdScreenWidth)
-                                    .aspectRatio(16 / 9f),
-                                update = {
-                                    when (lifecycle) {
-                                        Lifecycle.Event.ON_PAUSE -> {
-                                            it.onPause()
-                                            it.player?.pause()
-                                        }
-                                        Lifecycle.Event.ON_RESUME -> {
-                                            it.onResume()
-                                        }
-                                        else -> Unit
+                        val exoPlayer = wordDetailViewModel.player.getExoPlayer()
+                        Row {
+                            DisposableEffect(
+                                AndroidView(factory ={context ->
+                                    PlayerView(context).also {
+                                        it.player = exoPlayer
                                     }
                                 },
-                            )
-                        ){
-                            onDispose { wordDetailViewModel.player.release() }
+                                    modifier = Modifier
+                                        .width(oneThirdScreenWidth)
+                                        .padding(8.dp)
+                                        .aspectRatio(16 / 9f)
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    update = {
+                                        when (lifecycle) {
+                                            Lifecycle.Event.ON_PAUSE -> {
+                                                it.onPause()
+                                                it.player?.pause()
+                                            }
+                                            Lifecycle.Event.ON_RESUME -> {
+                                                it.onResume()
+                                            }
+                                            else -> Unit
+                                        }
+                                    },
+                                )
+                            ){
+                                onDispose { exoPlayer?.release() }
+                            }
+                            
+                            CardHandler(imageRes = wordDetailViewModel.word.value?.image, text = "") {
+                                
+                            }
                         }
+                        
                     }
                     else ->{}
                 }
             }
+
         }
     }
 
@@ -173,6 +206,7 @@ fun empty(text : String){
     Text(
         text = text,
         fontWeight = FontWeight.Bold,
+        fontSize=30.sp,
         color = Color.Black,
         textAlign = TextAlign.Center,
         modifier = Modifier
