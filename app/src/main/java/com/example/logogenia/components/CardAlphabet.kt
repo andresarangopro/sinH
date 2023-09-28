@@ -1,5 +1,6 @@
 package com.example.logogenia.components
 
+import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.logogenia.R
 
 
@@ -39,8 +41,11 @@ fun AlphabetCard(imageLetter: Int,imageSign: Int, text: String, onClick: () -> U
         }
       ) {
         Box( modifier = Modifier.fillMaxSize()){
+
             Image(
-                painter = painterResource(id = imageLetter),
+                painter = rememberAsyncImagePainter(
+                    model = imageLetter
+                ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -73,7 +78,9 @@ fun AlphabetCard(imageLetter: Int,imageSign: Int, text: String, onClick: () -> U
                 .height(50.dp)
             ){
                 Image(
-                    painter = painterResource(id = imageSign),
+                    painter = rememberAsyncImagePainter(
+                        model = imageSign
+                    ),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
