@@ -43,8 +43,8 @@ fun AlphabetCard(imageLetter: Int,imageSign: Int, text: String, onClick: () -> U
         Box( modifier = Modifier.fillMaxSize()){
 
             Image(
-                painter = rememberAsyncImagePainter(
-                    model = imageLetter
+                painter = painterForVersionAndroid(
+                    imageRes = imageLetter
                 ),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
@@ -78,8 +78,8 @@ fun AlphabetCard(imageLetter: Int,imageSign: Int, text: String, onClick: () -> U
                 .height(50.dp)
             ){
                 Image(
-                    painter = rememberAsyncImagePainter(
-                        model = imageSign
+                    painter = painterForVersionAndroid(
+                        imageRes = imageSign
                     ),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,

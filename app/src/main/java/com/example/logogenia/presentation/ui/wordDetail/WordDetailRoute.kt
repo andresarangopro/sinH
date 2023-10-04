@@ -184,9 +184,10 @@ fun view( wordDetailViewModel: WordDetailViewModel, screenWidth : Dp){
                             ){
                                 onDispose { exoPlayer?.release() }
                             }
-                            
-                            CardHandler(imageRes = wordDetailViewModel.word.value?.image, text = "") {
-                                
+                            wordDetailViewModel.word.value?.image?.let {
+                                CardHandler(imageRes = it, text = "") {
+
+                                }
                             }
                         }
                         
