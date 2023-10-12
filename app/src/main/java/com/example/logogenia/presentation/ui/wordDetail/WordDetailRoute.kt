@@ -3,25 +3,20 @@ package com.example.logogenia.presentation.ui.wordDetail
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -31,27 +26,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.SavedStateHandle
-import androidx.media3.common.Player
-import androidx.media3.ui.PlayerView
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.logogenia.R
 import com.example.logogenia.components.CardHandler
+import com.example.logogenia.components.ExoPlayerComponent
 import com.example.logogenia.components.LockScreenOrientation
+import com.example.logogenia.components.RoundedButtonIcon
 import com.example.logogenia.presentation.navigation.KEY_CONTENT_PAGE_INDEX
 import com.example.logogenia.presentation.navigation.NavRoute
 import com.example.logogenia.presentation.navigation.getOrThrow
@@ -110,133 +102,94 @@ fun ContentPage(
 fun view(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
     LogogeniaTheme {
         Scaffold(
+            modifier = Modifier
+                .padding(0.dp),
             topBar = {
-                CenterAlignedTopAppBar(title = {
-                    empty(text = "Centered")
-                })
-            },
-            content = {
-                LazyRow(contentPadding = it) {
-                    item {
-                        empty(text = "hplñ")
+                SmallTopAppBar(
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = Color.Transparent
+                    ),
+                    modifier = Modifier.padding(0.dp),
+                    title = {
+                        Text("")
+                    },
+                    navigationIcon = {
+                        RoundedButtonIcon(iconVector = R.drawable.ic_left, iconSize = 60.dp) {
+                            wordDetailViewModel.navigateUp()
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            Column(
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .background(GrayLight)
+                    .padding(16.dp)
+
+            ) {
+                val wordChanged by wordDetailViewModel.word.observeAsState()
+                val playerStateIcon by wordDetailViewModel.icStatePlayer.observeAsState()
+                var lifecycle by remember {
+                    mutableStateOf(Lifecycle.Event.ON_CREATE)
+                }
+                val lifecycleOwner = LocalLifecycleOwner.current
+
+                val oneThirdScreenWidth = screenWidth - ((screenWidth / 3) + 30.dp)
+                val exoPlayer = wordDetailViewModel.player.getExoPlayer()
+
+                DisposableEffect(lifecycleOwner) {
+                    val observer = LifecycleEventObserver { _, event ->
+                        lifecycle = event
+                    }
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                    onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
                     }
                 }
-
-            }
-        )
-        Column(
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(GrayLight)
-                .padding(8.dp)
-
-        ) {
-            val wordChanged by wordDetailViewModel.word.observeAsState()
-
-            var lifecycle by remember {
-                mutableStateOf(Lifecycle.Event.ON_CREATE)
-            }
-            val lifecycleOwner = LocalLifecycleOwner.current
-
-            val oneThirdScreenWidth = screenWidth - ((screenWidth / 3) + 30.dp)
-            val exoPlayer = wordDetailViewModel.player.getExoPlayer()
-
-            DisposableEffect(lifecycleOwner) {
-                val observer = LifecycleEventObserver { _, event ->
-                    lifecycle = event
-                }
-                lifecycleOwner.lifecycle.addObserver(observer)
-                onDispose {
-                    lifecycleOwner.lifecycle.removeObserver(observer)
-                }
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-            ) {
 
                 Box(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
+                        .fillMaxSize()
+                        .padding(8.dp)
                 ) {
+
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .fillMaxWidth(0.6f)
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
                     ) {
-                        exoPlayerComponent(lifecycle, oneThirdScreenWidth, exoPlayer)
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.4f)
-                            .align(Alignment.CenterEnd)
-                    ) {
-                        wordChanged?.let {
-                            CardHandler(imageRes = it.image, text = it.word, wordDetailViewModel)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(0.6f)
+                        ) {
+                            ExoPlayerComponent(lifecycle, oneThirdScreenWidth, exoPlayer)
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(0.4f)
+                                .align(Alignment.CenterEnd)
+                        ) {
+                            wordChanged?.let {
+                                CardHandler(
+                                    imageRes = it.image,
+                                    text = it.word,
+                                    baseViewModel = wordDetailViewModel,
+                                    icStatusPlayerButton = playerStateIcon ?: 0
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 }
 
-@Composable
-private fun exoPlayerComponent(
-    lifecycle: Lifecycle.Event,
-    oneThirdScreenWidth: Dp,
-    exoPlayer: Player?
-) {
-    DisposableEffect(
-        AndroidView(
-            factory = { context ->
-                PlayerView(
-                    context
-                ).also {
-                    it.player = exoPlayer
-                }
-            },
-            modifier = Modifier
-                .width(oneThirdScreenWidth)
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(8.dp)),
-            update = {
-                when (lifecycle) {
-                    Lifecycle.Event.ON_PAUSE -> {
-                        it.onPause()
-                        it.player?.pause()
-                    }
 
-                    Lifecycle.Event.ON_RESUME -> {
-                        it.onResume()
-                    }
 
-                    else -> Unit
-                }
-            },
-        )
-    ) {
-        onDispose { exoPlayer?.release() }
-    }
-}
-
-@Composable
-fun empty(text: String) {
-    Text(
-        text = text,
-        fontWeight = FontWeight.Bold,
-        fontSize = 26.sp,
-        color = Color.Black,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp, 8.dp, 0.dp, 8.dp)
-
-    )
-}

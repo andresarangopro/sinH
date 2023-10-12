@@ -1,7 +1,5 @@
 package com.example.logogenia.components
 
-
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,19 +20,24 @@ import coil.request.ImageRequest
 import com.example.logogenia.presentation.ui.IBaseViewModel
 import com.example.logogenia.presentation.ui.getDrawableId
 import com.example.logogenia.presentation.ui.wordDetail.WordDetailViewModel
-import com.example.logogenia.presentation.ui.wordDetail.empty
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardHandler(imageRes: String?, text: String, baseViewModel: IBaseViewModel){
-
-    Card( modifier = Modifier
-        .fillMaxWidth(),
-      ) {
-        Box(modifier = Modifier.fillMaxSize()){
-            val request = ImageRequest.Builder(LocalContext.current).data(imageRes).allowHardware(false).build()
-            Log.d("image","${request}")
-            empty(text = text)
+fun CardHandler(
+    imageRes: String?,
+    text: String,
+    baseViewModel: IBaseViewModel,
+    icStatusPlayerButton: Int
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            val request =
+                ImageRequest.Builder(LocalContext.current).data(imageRes).allowHardware(false)
+                    .build()
+            Title(text = text)
             AsyncImage(
                 model = request,
                 contentDescription = null,
@@ -43,23 +46,21 @@ fun CardHandler(imageRes: String?, text: String, baseViewModel: IBaseViewModel){
                     .fillMaxSize()
                     .clip(RoundedCornerShape(16.dp))
             )
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .align(Alignment.BottomCenter)
+            ) {
+                val drawableRightArrow = getDrawableId("ic_left", LocalContext.current)
+                val drawableLeftArrow = getDrawableId("ic_right", LocalContext.current)
 
-            Row (modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .align(Alignment.BottomCenter)
-            ){
-                val drawableRightArrow = getDrawableId("arrow_left_ic", LocalContext.current)
-                val drawableLeftArrow = getDrawableId("arrow_right_ic", LocalContext.current)
-                RoundedButtonIcon(drawableRightArrow){
+                RoundedButtonIcon(drawableRightArrow, 40.dp) {
                     baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.PreviousVideo)
                 }
-                RoundedButtonIcon(drawableLeftArrow){
-                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.CheckingClass("Play"))
+                RoundedButtonIcon(icStatusPlayerButton, 40.dp) {
+                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.PlayVideo)
                 }
-                RoundedButtonIcon(drawableLeftArrow){
-                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.CheckingClass("Replay"))
-                }
-                RoundedButtonIcon(drawableLeftArrow){
+                RoundedButtonIcon(drawableLeftArrow, 40.dp) {
                     baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.NextVideo)
                 }
 
@@ -67,8 +68,9 @@ fun CardHandler(imageRes: String?, text: String, baseViewModel: IBaseViewModel){
         }
     }
 }
+
 @Composable
 @Preview
-fun ShowCardHandler(){
+fun ShowCardHandler() {
 
 }
