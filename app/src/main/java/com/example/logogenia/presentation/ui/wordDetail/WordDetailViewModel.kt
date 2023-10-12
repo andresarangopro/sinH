@@ -1,21 +1,20 @@
 package com.example.logogenia.presentation.ui.wordDetail
 
-import android.content.Context
+
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import com.example.domain.databasemanager.model.VideoItem
 import com.example.domain.databasemanager.model.Word
 import com.example.domain.databasemanager.usecases.GetWordsByLetterUseCase
 import com.example.logogenia.presentation.navigation.RouteNavigator
+import com.example.logogenia.presentation.ui.BaseViewModel
 import com.example.logogenia.presentation.ui.player.ExoPlayerProvider
 import com.old.domain.model.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +29,7 @@ class WordDetailViewModel @Inject constructor(
     private val routeNavigator: RouteNavigator,
     private val getWordsByLetterUseCase: GetWordsByLetterUseCase,
     val player: ExoPlayerProvider
-): ViewModel(),RouteNavigator by routeNavigator {
+): BaseViewModel<WordDetailViewModel.WordDetailsEvent, WordDetailViewModel.WordDetailsStatus>(),RouteNavigator by routeNavigator {
 
     private val _letter: MutableLiveData<String> = MutableLiveData()
     val letter: LiveData<String> = _letter
@@ -53,6 +52,7 @@ class WordDetailViewModel @Inject constructor(
     private val videoUris = savedStateHandle.getStateFlow("videoUris", emptyList<Uri>())
 
     val mediaItems = arrayListOf<MediaItem>()
+
     val videoItems = videoUris.map { uris ->
         uris.map { uri ->
             VideoItem(
@@ -82,13 +82,12 @@ class WordDetailViewModel @Inject constructor(
     }
 
     init {
-         player.initialize()
-          player.prepare()
+        player.initialize()
+        player.prepare()
         _letter.value = WordDetailRoute.getStringFrom(savedStateHandle)
         _letter.value?.let { letter ->
             loadAllWordsData(letter)
         }
-        Log.d("INNVIEWM", "${allWords.value?.size}")
     }
 
     private fun loadAllWordsData(letter : String) =
@@ -98,17 +97,25 @@ class WordDetailViewModel @Inject constructor(
     private fun handleTopRatedMovieList( words: List<Word>) {
         Log.d("INNVIEWM","${words?.size}")
         _allWords.value = words
+        setVideoOnPlayer()
+    }
+
+    private fun setVideoOnPlayer(){
         _word.value = wordPosition.value?.let { allWords.value?.get(it) }
 
+        Log.d("WordPosition","${_word.value?.word } -- ${_word.value?.image } ")
         allWords.value?.let {
             addVideoUri(it[wordPosition.value?:0].video)
         }
-        _status.value = States(WordDetailsStatus.ShowWords(words))
+
+        word.value?.let {
+            _status.value = States(WordDetailsStatus.ShowWord(it))
+        }
     }
     private fun handleFailure(failure: Failure) {
-        Log.d("FALLO","$failure")
         _failure.value = failure
     }
+
 
     fun playVideo(){
         var uri: Uri?= allWords.value!!.get(wordPosition.value?:0).video.toUri()
@@ -136,8 +143,37 @@ class WordDetailViewModel @Inject constructor(
         })
     }
 
+
     sealed class WordDetailsStatus {
-        data class ShowWords(val listOfWords : List<Word>):WordDetailsStatus()
+        data class ShowWord(val word : Word):WordDetailsStatus()
     }
+
+    sealed class WordDetailsEvent {
+        object NextVideo :WordDetailsEvent()
+        object PreviousVideo :WordDetailsEvent()
+        data class CheckingClass(val string : String) :WordDetailsEvent()
+    }
+
+
+    override fun manageEvent(event: Any) {
+        when(event) {
+            is WordDetailsEvent.NextVideo -> {
+                if(wordPosition.value?.plus(1)?:0 < allWords.value?.size!!) {
+                    _wordPosition.value = wordPosition.value?.plus(1)
+                    setVideoOnPlayer()
+                }
+            }
+            is WordDetailsEvent.PreviousVideo -> {
+                if(wordPosition.value?.minus(1)?:0 >= 0) {
+                    _wordPosition.value = wordPosition.value?.minus(1)
+                    setVideoOnPlayer()
+                }
+            }
+            is WordDetailsEvent.CheckingClass ->{
+                Log.d("ActionObserver","${event.string}")
+            }
+        }
+    }
+
 
 }

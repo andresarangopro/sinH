@@ -65,7 +65,7 @@ fun AlphabetCard(imageLetter: Int,imageSign: Int, text: String, onClick: () -> U
                     textAlign = TextAlign.Center,
                             modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp,8.dp,0.dp,8.dp)
+                        .padding(24.dp,8.dp,0.dp,8.dp)
 
                 )
             }

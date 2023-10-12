@@ -1,6 +1,7 @@
 package com.example.logogenia.components
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,20 +19,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.logogenia.presentation.ui.IBaseViewModel
 import com.example.logogenia.presentation.ui.getDrawableId
-
+import com.example.logogenia.presentation.ui.wordDetail.WordDetailViewModel
+import com.example.logogenia.presentation.ui.wordDetail.empty
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardHandler(imageRes: String?, text: String, onClick: () -> Unit){
+fun CardHandler(imageRes: String?, text: String, baseViewModel: IBaseViewModel){
+
     Card( modifier = Modifier
         .fillMaxWidth(),
-        onClick =  {
-            onClick()
-        }
       ) {
-        Box( modifier = Modifier.fillMaxSize()){
+        Box(modifier = Modifier.fillMaxSize()){
             val request = ImageRequest.Builder(LocalContext.current).data(imageRes).allowHardware(false).build()
+            Log.d("image","${request}")
+            empty(text = text)
             AsyncImage(
                 model = request,
                 contentDescription = null,
@@ -47,10 +50,18 @@ fun CardHandler(imageRes: String?, text: String, onClick: () -> Unit){
             ){
                 val drawableRightArrow = getDrawableId("arrow_left_ic", LocalContext.current)
                 val drawableLeftArrow = getDrawableId("arrow_right_ic", LocalContext.current)
-                RoundedButtonIcon(drawableRightArrow)
-                RoundedButtonIcon(drawableLeftArrow)
-                RoundedButtonIcon(drawableLeftArrow)
-                RoundedButtonIcon(drawableLeftArrow)
+                RoundedButtonIcon(drawableRightArrow){
+                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.PreviousVideo)
+                }
+                RoundedButtonIcon(drawableLeftArrow){
+                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.CheckingClass("Play"))
+                }
+                RoundedButtonIcon(drawableLeftArrow){
+                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.CheckingClass("Replay"))
+                }
+                RoundedButtonIcon(drawableLeftArrow){
+                    baseViewModel.postEvents(WordDetailViewModel.WordDetailsEvent.NextVideo)
+                }
 
             }
         }
@@ -58,6 +69,6 @@ fun CardHandler(imageRes: String?, text: String, onClick: () -> Unit){
 }
 @Composable
 @Preview
-fun showCardHandler(){
-    CardHandler("R.drawable.word_presentation","text"){}
+fun ShowCardHandler(){
+
 }

@@ -10,9 +10,7 @@ class ExoPlayerProvider @Inject constructor(val context: Context) {
 
     fun initialize():Player {
         exoPlayer = ExoPlayer.Builder(context).build()
-
-        return ExoPlayer.Builder(context)
-            .build()
+        return exoPlayer as ExoPlayer
     }
 
     fun prepare(){

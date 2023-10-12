@@ -11,15 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 
 @Composable
-fun RoundedButtonIcon(iconVector : Int){
+fun  RoundedButtonIcon(iconVector : Int, onClick: () -> Unit){
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         modifier = Modifier
-            .padding(8.dp)
-            .width(40.dp)
-            .height(40.dp)
+            .padding(4.dp)
+            .width(45.dp)
+            .height(45.dp)
             .clip(RoundedCornerShape(20.dp))
             .fillMaxSize()
     ) {
