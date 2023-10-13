@@ -76,12 +76,6 @@ dependencies {
     implementationOwn(AppDependencies.exoPlayerLibraries)
     //test libs
     testImplementationOwn(AppDependencies.testLibraries)
-    testImplementation ("androidx.test.ext:junit-ktx:1.1.3")
-    testImplementation ("org.mockito:mockito-core:2.24.5")
-    testImplementation ("org.mockito.kotlin:mockito-kotlin:4.0.0")
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
-    testImplementation ("org.mockito:mockito-inline:4.8.0")
-    testImplementation ("androidx.arch.core:core-testing:2.1.0")
     androidTestImplementationOwn(AppDependencies.androidTestLibraries)
     implementation("com.squareup:javapoet:1.13.0")
     kapt(Hilt.compiler)

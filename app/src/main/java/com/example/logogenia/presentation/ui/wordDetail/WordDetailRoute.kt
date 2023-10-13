@@ -1,6 +1,7 @@
 package com.example.logogenia.presentation.ui.wordDetail
 
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -97,6 +98,7 @@ fun ContentPage(
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ViewWordDetail(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
     LogogeniaTheme {
@@ -119,7 +121,7 @@ fun ViewWordDetail(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
                     }
                 )
             }
-        ) { padding ->
+        ) { _->
             Column(
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier
