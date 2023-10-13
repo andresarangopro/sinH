@@ -11,7 +11,6 @@ import com.example.domain.databasemanager.usecases.GetWordsByLetterUseCase
 import com.example.logogenia.R
 import com.example.logogenia.presentation.navigation.RouteNavigator
 import com.example.logogenia.presentation.ui.BaseViewModel
-import com.example.logogenia.presentation.ui.player.ExoPlayerProvider
 import com.old.domain.model.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class WordDetailViewModel @Inject constructor(
     val savedStateHandle: SavedStateHandle,
     private val routeNavigator: RouteNavigator,
     private val getWordsByLetterUseCase: GetWordsByLetterUseCase,
-    val player: ExoPlayerProvider
+    val player: Player
 ) : BaseViewModel<WordDetailViewModel.WordDetailsEvent>(),
     RouteNavigator by routeNavigator {
     sealed class WordDetailsEvent {
@@ -48,8 +47,7 @@ class WordDetailViewModel @Inject constructor(
     private val _icStatusPlayer: MutableLiveData<Int> = MutableLiveData(R.drawable.ic_play)
     val icStatePlayer: LiveData<Int> = _icStatusPlayer
 
-     init {
-        player.initialize()
+    init {
         player.prepare()
         _letter.value = WordDetailRoute.getStringFrom(savedStateHandle)
         _letter.value?.let { letter ->
@@ -59,7 +57,7 @@ class WordDetailViewModel @Inject constructor(
     }
 
     private fun exoPlayerListener() {
-        player.getExoPlayer()?.addListener(object : Player.Listener {
+        player.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 super.onIsPlayingChanged(isPlaying)
                 if (isPlaying) {
@@ -94,13 +92,14 @@ class WordDetailViewModel @Inject constructor(
         _failure.value = failure
     }
 
-    fun addVideoUri(uri: String) {
-        player.getExoPlayer()?.setMediaItem(
+    private fun addVideoUri(uri: String) {
+        player.setMediaItem(
             MediaItem.fromUri(uri)
         )
     }
-    private fun playVideo(){
-        with(player.getExoPlayer()) {
+
+    private fun playVideo() {
+        with(player) {
             if (this?.isPlaying == true) {
                 this?.pause()
             } else if (this?.isPlaying == false && this?.getPlaybackState() == Player.STATE_ENDED) {
@@ -111,6 +110,7 @@ class WordDetailViewModel @Inject constructor(
             }
         }
     }
+
     override fun manageEvent(event: Any) {
         when (event) {
             is WordDetailsEvent.NextVideo -> {

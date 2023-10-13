@@ -1,6 +1,7 @@
 package com.example.logogenia.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,20 +21,18 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RoundedButtonIcon(iconVector: Int, iconSize: Dp, onClick: () -> Unit) {
-    Card(
-        onClick= onClick,
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 10.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background,
-        ),
-        shape = RoundedCornerShape(iconSize / 2),
-        modifier = Modifier.size(iconSize)
+fun  RoundedButtonIcon(iconVector : Int, iconSize: Dp, onClick: () -> Unit){
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .padding(4.dp)
+            .size(iconSize)
+            .clip(RoundedCornerShape(iconSize/2))
+            .fillMaxSize()
     ) {
         Image(
-            painter = painterForVersionAndroid(imageRes = iconVector), contentDescription = ""
+            painter = painterForVersionAndroid(imageRes = iconVector),
+            contentDescription = ""
         )
     }
 }

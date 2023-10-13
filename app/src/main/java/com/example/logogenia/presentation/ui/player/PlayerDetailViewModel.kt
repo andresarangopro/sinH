@@ -78,10 +78,6 @@ class PlayerDetailViewModel @Inject constructor(
     init {
         _letter.value = WordDetailRoute.getStringFrom(savedStateHandle)
         loadAllWordsData()
-        Log.d("INNVIEWM", "${allWords.value?.size}")
-
-
-
     }
 
     private fun loadAllWordsData() =

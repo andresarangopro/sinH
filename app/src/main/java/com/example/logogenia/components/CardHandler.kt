@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.logogenia.presentation.ui.IBaseViewModel
-import com.example.logogenia.presentation.ui.capitalizeFirstLetter
 import com.example.logogenia.presentation.ui.getDrawableId
 import com.example.logogenia.presentation.ui.wordDetail.WordDetailViewModel
 
@@ -51,7 +50,7 @@ fun CardHandler(
             val request =
                 ImageRequest.Builder(LocalContext.current).data(imageRes).allowHardware(false)
                     .build()
-            Title(text = text.capitalizeFirstLetter())
+            Title(text = text)
             AsyncImage(
                 model = request,
                 contentDescription = null,

@@ -13,6 +13,7 @@ import com.example.domain.databasemanager.WordDao
 import com.example.domain.databasemanager.repository.ApiConstants
 import com.example.domain.databasemanager.repository.MaterialRepository
 import com.example.logogenia.BuildConfig
+import com.example.logogenia.presentation.ui.knowingWords.KnowingWordsRoute
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -77,7 +78,6 @@ class AppModule {
     fun provideVideoPlayer(app: Application): Player{
         return ExoPlayer.Builder(app)
             .build()
-
     }
 
     @Provides

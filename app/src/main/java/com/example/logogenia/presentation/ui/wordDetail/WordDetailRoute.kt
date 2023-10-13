@@ -46,10 +46,9 @@ import com.example.logogenia.components.RoundedButtonIcon
 import com.example.logogenia.presentation.navigation.KEY_CONTENT_PAGE_INDEX
 import com.example.logogenia.presentation.navigation.NavRoute
 import com.example.logogenia.presentation.navigation.getOrThrow
-import com.example.logogenia.presentation.ui.theme.GrayLight
 import com.example.logogenia.presentation.ui.theme.LogogeniaTheme
 
-object WordDetailRoute : NavRoute<WordDetailViewModel> {
+object WordDetailRoute: NavRoute<WordDetailViewModel> {
 
     override val route = "wordDetail/{$KEY_CONTENT_PAGE_INDEX}"
 
@@ -114,7 +113,7 @@ fun ViewWordDetail(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
                         Text("")
                     },
                     navigationIcon = {
-                        RoundedButtonIcon(iconVector = R.drawable.ic_left, iconSize = 60.dp) {
+                        RoundedButtonIcon(iconVector = R.drawable.ic_left, iconSize = 65.dp) {
                             wordDetailViewModel.navigateUp()
                         }
                     }
@@ -138,7 +137,7 @@ fun ViewWordDetail(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
                 val lifecycleOwner = LocalLifecycleOwner.current
 
                 val oneThirdScreenWidth = screenWidth - ((screenWidth / 3) + 30.dp)
-                val exoPlayer = wordDetailViewModel.player.getExoPlayer()
+                val exoPlayer = wordDetailViewModel.player
 
                 DisposableEffect(lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
