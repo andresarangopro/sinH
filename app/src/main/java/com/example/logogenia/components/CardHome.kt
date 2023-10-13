@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.logogenia.R
+import com.example.logogenia.presentation.ui.theme.gerberaFontFamily
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +54,7 @@ fun EmptyCard(imageRes: Int, text: String, onClick: () -> Unit){
                 Text(
                     text = text,
                     fontWeight = FontWeight.Bold,
+                    fontFamily = gerberaFontFamily,
                     color = Color.Black,
                     modifier = Modifier
                         .fillMaxWidth()

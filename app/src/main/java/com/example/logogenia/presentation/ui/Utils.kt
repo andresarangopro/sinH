@@ -26,3 +26,11 @@ fun <T : Any, L : LiveData<T>> LifecycleOwner.observeCompose(liveData: L, body: 
 interface IBaseViewModel{
     fun postEvents(event: Any)
 }
+
+fun String.capitalizeFirstLetter(): String {
+    return if (isNotEmpty()) {
+        this[0].uppercaseChar() + substring(1)
+    } else {
+        this
+    }
+}

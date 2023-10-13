@@ -19,3 +19,18 @@ fun LockScreenOrientation(orientation: Int) {
         }
     }
 }
+
+@Composable
+fun LockScreenOrientationDisposable(orientation: Int) {
+    val configuration = LocalConfiguration.current
+    val activity = LocalContext.current as? Activity
+    val oldOrientation = configuration.orientation
+    DisposableEffect(configuration.orientation) {
+        activity?.requestedOrientation = orientation
+        onDispose {
+            // restore original orientation when view disappears
+            activity?.requestedOrientation = oldOrientation
+
+        }
+    }
+}

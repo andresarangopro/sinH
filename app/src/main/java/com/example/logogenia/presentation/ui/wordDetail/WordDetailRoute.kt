@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.Dp
@@ -42,7 +41,7 @@ import androidx.navigation.navArgument
 import com.example.logogenia.R
 import com.example.logogenia.components.CardHandler
 import com.example.logogenia.components.ExoPlayerComponent
-import com.example.logogenia.components.LockScreenOrientation
+import com.example.logogenia.components.LockScreenOrientationDisposable
 import com.example.logogenia.components.RoundedButtonIcon
 import com.example.logogenia.presentation.navigation.KEY_CONTENT_PAGE_INDEX
 import com.example.logogenia.presentation.navigation.NavRoute
@@ -70,8 +69,10 @@ object WordDetailRoute : NavRoute<WordDetailViewModel> {
     override fun viewModel(): WordDetailViewModel = hiltViewModel()
 
     @Composable
-    override fun Content(viewModel: WordDetailViewModel) =
+    override fun Content(viewModel: WordDetailViewModel){
         ContentPage(viewModel)
+    }
+
 }
 
 @Composable
@@ -79,19 +80,18 @@ fun ContentPage(
     wordDetailViewModel: WordDetailViewModel
 ) {
     val configuration = LocalConfiguration.current
+    LockScreenOrientationDisposable(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
     //view(wordDetailViewModel = wordDetailViewModel, screenWidth = configuration.screenWidthDp.dp)
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
-            Text("Landscape")
-            view(
+            ViewWordDetail(
                 wordDetailViewModel = wordDetailViewModel,
                 screenWidth = configuration.screenWidthDp.dp
             )
         }
 
         else -> {
-            Text("Portrait")
-            LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            LockScreenOrientationDisposable(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
         }
     }
 }
@@ -99,7 +99,7 @@ fun ContentPage(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun view(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
+fun ViewWordDetail(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
     LogogeniaTheme {
         Scaffold(
             modifier = Modifier
@@ -126,7 +126,7 @@ fun view(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
-                    .background(GrayLight)
+                    .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
 
             ) {
@@ -172,6 +172,7 @@ fun view(wordDetailViewModel: WordDetailViewModel, screenWidth: Dp) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth(0.4f)
+                                .padding(horizontal = 8.dp)
                                 .align(Alignment.CenterEnd)
                         ) {
                             wordChanged?.let {
