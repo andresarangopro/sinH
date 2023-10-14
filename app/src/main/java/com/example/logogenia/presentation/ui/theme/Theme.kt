@@ -40,11 +40,12 @@ private val DarkColorPalette = darkColorScheme(
     surface = Gray10,
     onSurface = Gray90,
     inverseSurface = Gray90,
-    inverseOnSurface = Gray10
+    inverseOnSurface = Gray10,
+    surfaceTint = Gray95,
 )
 
 private val LightColorPalette = lightColorScheme(
-    primary = Yellow40,
+    primary = Blue700,
     onPrimary = Gray10,
     primaryContainer = Yellow90,
     onPrimaryContainer = Yellow10,
@@ -66,8 +67,10 @@ private val LightColorPalette = lightColorScheme(
     surface = Gray90,
     onSurface = Gray30,
     inverseSurface = Gray20,
-    inverseOnSurface = Gray95
+    inverseOnSurface = Gray95,
+    surfaceTint = Gray95,
 )
+
 @Composable
 fun LogogeniaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -76,11 +79,10 @@ fun LogogeniaTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+       /* dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
+        }*/
         darkTheme -> DarkColorPalette
         else -> LightColorPalette
     }
