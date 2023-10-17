@@ -18,7 +18,7 @@ import androidx.core.view.WindowCompat
 
 
 private val DarkColorPalette = darkColorScheme(
-    primary = Yellow80,
+    primary = Blue900,
     onPrimary = Yellow20,
     primaryContainer = Yellow30,
     onPrimaryContainer = Yellow90,
@@ -28,14 +28,14 @@ private val DarkColorPalette = darkColorScheme(
     secondaryContainer = DarkYellow30,
     onSecondaryContainer = DarkYellow90,
     tertiary = Orange80,
-    onTertiary = Orange20,
+    onTertiary = Color.White,
     tertiaryContainer = Orange30,
     onTertiaryContainer = Orange90,
     error = Red80,
     onError = Red20,
     errorContainer = Red30,
     onErrorContainer = Red90,
-    background = Gray10,
+    background = Gray95,
     onBackground = Gray90,
     surface = Gray10,
     onSurface = Gray90,
