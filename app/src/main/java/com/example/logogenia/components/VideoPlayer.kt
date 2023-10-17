@@ -53,6 +53,7 @@ fun ExoPlayerComponent(
     oneThirdScreenWidth: Dp,
     exoPlayer: Player?
 ) {
+
     DisposableEffect(
         AndroidView(
             factory = { context ->
@@ -84,6 +85,6 @@ fun ExoPlayerComponent(
             },
         )
     ) {
-        onDispose { exoPlayer?.release() }
+        onDispose { exoPlayer?.stop() }
     }
 }
