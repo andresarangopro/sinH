@@ -79,4 +79,12 @@ dependencies {
     androidTestImplementationOwn(AppDependencies.androidTestLibraries)
     implementation("com.squareup:javapoet:1.13.0")
     kapt(Hilt.compiler)
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
+
+    // Add the dependency for the Analytics library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-analytics")
+
 }
