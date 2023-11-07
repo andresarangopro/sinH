@@ -14,6 +14,9 @@ import com.example.domain.databasemanager.repository.ApiConstants
 import com.example.domain.databasemanager.repository.MaterialRepository
 import com.example.logogenia.BuildConfig
 import com.example.logogenia.presentation.ui.knowingWords.KnowingWordsRoute
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -78,6 +81,12 @@ class AppModule {
     fun provideVideoPlayer(app: Application): Player{
         return ExoPlayer.Builder(app)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseAnalytics(): FirebaseAnalytics{
+        return Firebase.analytics
     }
 
     @Provides
