@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -68,7 +69,8 @@ fun ContentPage(
                     colors = TopAppBarDefaults.smallTopAppBarColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     ),
-                    modifier = Modifier.padding(0.dp)
+                    modifier = Modifier
+                        .padding(0.dp)
                         .height(40.dp),
                     title = {
                         Text("")
@@ -88,6 +90,9 @@ fun ContentPage(
                     RowOptionsNavigation(homeViewModel.cards, "Señas")
                     RowOptionsNavigation(homeViewModel.cards2, "Dactilológico")
                     RowOptionsNavigation(homeViewModel.cards3, "Leer y Escribir")
+                    Button(onClick = { homeViewModel.event()}) {
+                        Text(text ="Test")
+                    }
                 }
             }
         }

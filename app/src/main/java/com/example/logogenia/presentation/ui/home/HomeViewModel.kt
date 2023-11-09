@@ -1,7 +1,6 @@
 package com.example.logogenia.presentation.ui.home
 
-import android.R.attr.name
-import android.R.id
+
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,6 +8,7 @@ import com.example.logogenia.R
 import com.example.logogenia.presentation.navigation.RouteNavigator
 import com.example.logogenia.presentation.ui.knowingWords.KnowingWordsRoute
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.logEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -44,11 +44,13 @@ class HomeViewModel @Inject constructor(
     }
 
     init {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id")
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "name")
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image")
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW,bundle)
+        event()
+    }
+
+    fun event(){
+        firebaseAnalytics.logEvent("TEST"){
+            param("test", "test")
+        }
     }
 }
 

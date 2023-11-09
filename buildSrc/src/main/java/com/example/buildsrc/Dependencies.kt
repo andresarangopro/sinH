@@ -71,7 +71,7 @@ object Firebase {
 }
 
 object Hilt {
-    private const val version = "2.46.1"
+    private const val version = "2.48.1"
 
     const val android = "com.google.dagger:hilt-android:$version"
     const val compiler = "com.google.dagger:hilt-compiler:$version"

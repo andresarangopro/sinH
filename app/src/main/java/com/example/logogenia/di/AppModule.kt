@@ -13,10 +13,9 @@ import com.example.domain.databasemanager.WordDao
 import com.example.domain.databasemanager.repository.ApiConstants
 import com.example.domain.databasemanager.repository.MaterialRepository
 import com.example.logogenia.BuildConfig
-import com.example.logogenia.presentation.ui.knowingWords.KnowingWordsRoute
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
